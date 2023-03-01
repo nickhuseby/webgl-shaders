@@ -15,7 +15,7 @@ int black_or_white(vec2 pos) {
     }
 }
 
-float evolution(vec2 pos) {
+vec3 evolution(vec2 pos) {
     float vert = 1.0 / u_resolution.y;
     float wid = 1.0/ u_resolution.x;
     vec2 up = vec2(0.0, vert);
@@ -34,12 +34,12 @@ float evolution(vec2 pos) {
     if (black_or_white(pos + left) == 0) k+=1;  
     
     if (k == 6) {
-        return 0.0;
+        return vec3(0.0, 0.0, 0.0);
     } else if (k >= 8){
-        return 1.0;
+        return vec3(1.0, 1.0, 1.0);
     }
 
-    return texture2D(u_texture, pos).r;
+    return texture2D(u_texture, pos).rgb;
 }
 
 float map(float value, float min1, float max1, float min2, float max2) {
@@ -49,9 +49,9 @@ float map(float value, float min1, float max1, float min2, float max2) {
 void main() {
     vec2 st = gl_FragCoord.xy/u_resolution;
     vec2 f_st = fract(st);
-    float evo = evolution(st);
+    vec3 evo = evolution(st);
     float alpha = texture2D(u_texture, st).a;
-    vec4 tex = vec4(vec3(evo), alpha);
+    vec4 tex = vec4(evo, alpha);
     gl_FragColor = tex;
 }
 `; 
