@@ -1,9 +1,9 @@
-import vertexShaderSource from './mod/vert.js';
-import fragmentShaderSource from './mod/cellularAutomataFrag.js';
-import initialFragmentShaderSource from './mod/initialFrag.js';
-import { setTexcoords, createShader, createProgram, resizeCanvasToDisplaySize } from './util/helpers.js';
+import vertexShaderSource from '../glsl/standard.vert.js';
+import fragmentShaderSource from '../glsl/cellularAutomata.frag.js';
+import initialFragmentShaderSource from '../glsl/randomInit.frag.js';
+import { setTexcoords, createShader, createProgram, resizeCanvasToDisplaySize } from '../util/helpers.js';
 
-(function() {
+export default function() {
 
     const canvas = document.querySelector("#c");
     const gl = canvas.getContext("webgl");
@@ -155,4 +155,4 @@ import { setTexcoords, createShader, createProgram, resizeCanvasToDisplaySize } 
 
     requestAnimationFrame(drawScene);
     
-})();
+}
