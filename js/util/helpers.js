@@ -14,7 +14,6 @@ export function setTexcoords(gl) {
 }
 
 export function createShader(gl, type, source) {
-    console.log(source);
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
@@ -43,7 +42,7 @@ export function createProgram(gl, vertexShader, fragmentShader) {
 
 export function resizeCanvasToDisplaySize(canvas) {
     // init with the default canvas size
-    const canvasToDisplaySizeMap = new Map([[canvas, [250, 400]]]);
+    const canvasToDisplaySizeMap = new Map([[canvas, [4000, 6000]]]);
     
     function onResize(entries) {
         for (const entry of entries) {

@@ -1,5 +1,5 @@
-import run from './comp/cellularAutomata.comp.js';
+import run from './comp/reactionDiffusion.comp.js';
 
 (function() {
-    requestAnimationFrame(run);
+    run();
 })();
