@@ -13,32 +13,34 @@ uniform float u_diffA;
 uniform float u_diffB;
 uniform float u_feed;
 uniform float u_kill;
-uniform int u_time;
+uniform float u_time;
 
-highp vec2 laplacian(ivec2 coord) {
-  highp vec2 sum = vec2(0., 0.);
+vec2 laplacian(vec2 coord) {
+  float w = 1.0 / u_resolution.x;
+  float h = 1.0 / u_resolution.y;
+  vec2 sum = vec2(0., 0.);
 
-  int cx = coord.x;
-  int cy = coord.y;
-  int left = coord.x -1;
-  int right = coord.x + 1;
-  int up = coord.y -1;
-  int down = coord.y + 1;
+  float cx = coord.x;
+  float cy = coord.y;
+  float left = coord.x - w;
+  float right = coord.x + w;
+  float up = coord.y - h;
+  float down = coord.y + h;
 
-  if (left < 0) left = int(u_w) -1;
-  if (right >= int(u_w)) right = 0;
-  if (up < 0) up = int(u_h) - 1;
-  if (down >= int(u_h)) down = 0;
+  if (left < 0.0) left = u_resolution.x - w;
+  if (right >= u_resolution.x) right = 0.0;
+  if (up < 0.0) up = u_resolution.y - h;
+  if (down >= u_resolution.y) down = 0.0;
 
-  sum += texture2D(u_texture, ivec2(cx, cy)).rg * -1.;
-  sum += texture2D(u_texture, ivec2(cx, up)).rg * .2;
-  sum += texture2D(u_texture, ivec2(cx, down)).rg * .2;
-  sum += texture2D(u_texture, ivec2(left, cy)).rg * .2;
-  sum += texture2D(u_texture, ivec2(right, cy)).rg * .2;
-  sum += texture2D(u_texture, ivec2(left, up)).rg * .05;
-  sum += texture2D(u_texture, ivec2(right, up)).rg * .05;
-  sum += texture2D(u_texture, ivec2(right, down)).rg * .05;
-  sum += texture2D(u_texture, ivec2(left, down)).rg * .05;
+  sum += texture2D(u_texture, vec2(cx, cy)).rg * -1.;
+  sum += texture2D(u_texture, vec2(cx, up)).rg * .2;
+  sum += texture2D(u_texture, vec2(cx, down)).rg * .2;
+  sum += texture2D(u_texture, vec2(left, cy)).rg * .2;
+  sum += texture2D(u_texture, vec2(right, cy)).rg * .2;
+  sum += texture2D(u_texture, vec2(left, up)).rg * .05;
+  sum += texture2D(u_texture, vec2(right, up)).rg * .05;
+  sum += texture2D(u_texture, vec2(right, down)).rg * .05;
+  sum += texture2D(u_texture, vec2(left, down)).rg * .05;
 
   return sum;
 }
@@ -115,23 +117,25 @@ float snoise(vec3 v){
                                 dot(p2,x2), dot(p3,x3) ) );
 }
 
-main() {
+void main() {
+    float yCoord = u_resolution.y - gl_FragCoord.y;
+    vec2 texCoord = vec2(gl_FragCoord.x, yCoord);
     vec2 coord = gl_FragCoord.xy/u_resolution.xy;
 
-    float k = u_kill + snoise(vec3(u_resolution, u_time*100)) * 0.025;
-    float f = u_feed + snoise(vec3(coord, u_time*100)) * 0.004;
+    float k = u_kill;
+    float f = u_feed;
 
     float r, g;
 
-    vec4 prevCol = texture2D(u_texture, ivec2(gl_FragCoord));
+    vec4 prevCol = texture2D(u_texture, vec2(coord));
     float a = prevCol.r;
     float b = prevCol.g;
 
-    highp vec2 lp = laplacian(ivec2(texCoord));
+    vec2 lp = laplacian(vec2(coord));
 
     r = a + (u_diffA * lp.x - a * b * b + f * (1. - a));
     g = b + (u_diffB * lp.y + a * b * b - (k + f) * b);
 
-    fragColor = vec4( r, g, 0.0, 1.0 );
+    gl_FragColor = vec4( r, g, 0.0, 1.0 );
 }
 `
