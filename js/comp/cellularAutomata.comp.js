@@ -10,6 +10,7 @@ export default function() {
         
     if (!gl) {
         alert("This browser does not support WebGL");
+        return;
     }
     
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
