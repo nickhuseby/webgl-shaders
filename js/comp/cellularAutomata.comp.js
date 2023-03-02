@@ -13,9 +13,17 @@ export default function() {
         return;
     }
     
+    resizeCanvasToDisplaySize(gl.canvas);
+
+    const positionBuffer = gl.createBuffer();
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-
     const program = createProgram(gl, vertexShader, fragmentShader);
     
     const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
@@ -23,17 +31,7 @@ export default function() {
     const textureLocation = gl.getUniformLocation(program, "u_texture");
     const time = gl.getUniformLocation(program, "u_time");
 
-    const positionBuffer = gl.createBuffer();
-
     const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
-    
-    resizeCanvasToDisplaySize(gl.canvas);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
 
     setTexcoords(gl);
 
