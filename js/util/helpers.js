@@ -42,7 +42,7 @@ export function createProgram(gl, vertexShader, fragmentShader) {
 
 export function resizeCanvasToDisplaySize(canvas) {
     // init with the default canvas size
-    const canvasToDisplaySizeMap = new Map([[canvas, [400, 600]]]);
+    const canvasToDisplaySizeMap = new Map([[canvas, [800, 1200]]]);
     
     function onResize(entries) {
         for (const entry of entries) {

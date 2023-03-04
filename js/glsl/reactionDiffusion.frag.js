@@ -122,10 +122,8 @@ void main() {
     vec2 texCoord = vec2(gl_FragCoord.x, yCoord);
     vec2 coord = gl_FragCoord.xy/u_resolution.xy;
 
-    float k = u_kill;
-    float f = u_feed;
-
-    float r, g;
+    float k = u_kill + snoise(vec3(coord, u_time/18.)) * 0.04;
+    float f = u_feed + snoise(vec3(coord, u_time/19.)) * 0.02;
 
     vec4 prevCol = texture2D(u_texture, vec2(coord));
     float a = prevCol.r;
@@ -133,9 +131,12 @@ void main() {
 
     vec2 lp = laplacian(vec2(coord));
 
-    r = a + (u_diffA * lp.x - a * b * b + f * (1. - a));
-    g = b + (u_diffB * lp.y + a * b * b - (k + f) * b);
+    a += (u_diffA * lp.x - a * b * b + f * (1. - a)) * 1.0;
+    b += (u_diffB * lp.y + a * b * b - (k + f) * b) * 1.0;
 
-    gl_FragColor = vec4( r, g, 0.0, 1.0 );
+    a = clamp(a, 0.0, 1.0);
+    b = clamp(b, 0.0, 1.0);
+
+    gl_FragColor = vec4( a, b, 0.0, 1.0 );
 }
 `

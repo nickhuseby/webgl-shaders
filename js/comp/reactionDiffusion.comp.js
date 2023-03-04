@@ -151,30 +151,27 @@ export default function () {
 
     function drawFrame(now) {
         now *= 0.001;
-        const deltaTime = now - then;
-        then = now;
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
             gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.uniform1f(rdTime, deltaTime);
+            gl.uniform1f(rdTime, now);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             rdDraw();
         }
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.bindTexture(gl.TEXTURE_2D, outTexture);
-            gl.uniform1f(rdTime, deltaTime);
+            gl.uniform1f(rdTime, now);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             rdDraw();
         }
         {
             gl.bindFramebuffer(gl.FRAMEBUFFER, rdfb);
             gl.bindTexture(gl.TEXTURE_2D, outTexture);
-            gl.uniform1f(rdTime, deltaTime);
+            gl.uniform1f(rdTime, now);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
             rdDraw();
         }
-
         requestAnimationFrame(drawFrame);
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, rdfb);
